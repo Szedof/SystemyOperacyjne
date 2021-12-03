@@ -95,7 +95,6 @@ Function configuration(Choose)
 End Function
 
 
-
 ' Funkcje z poczatkiem config% sluza do zmiany parametrow 
 Function configIP(Ask)
      for each value in Ask
