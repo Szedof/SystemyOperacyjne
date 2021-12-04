@@ -33,7 +33,7 @@ While endCheck
     end if
 Wend
 
-' Funkcja ktora sluzy do wyswitlania informacji wybranego interfejsu
+' Funkcja ktora sluzy do wyswietlania informacji wybranego interfejsu
 Function displayInfo(Choose)
     ' Tutaj do zapytania dodaje Description do ktorego przekazuje parametr zeby odwolac sie do konkretnego interfejsu
     ' arrayAdapters(Choose - 1) - interfejs na liscie wybru zaczyna sie od 1 a wartosci tablicy startuja od 0
