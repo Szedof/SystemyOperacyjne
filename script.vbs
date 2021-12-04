@@ -15,7 +15,7 @@ For Each adapter in IPConfigSet
     i = i + 1    
     adapterName = adapterName & adapter.Description
     msg = msg & "["&i&"]: " & adapter.Description & vbCrLf 
-    ' Rozszrzam rozmiar tablicy aby dodawac do niej bierzace elementy, w moim przypadku Description
+    ' Rozszerzam rozmiar tablicy aby dodawac do niej bierzace elementy, w moim przypadku Description
     ' bedzie to moj odnosnik do zapytania dla okreslonego interfejsu sieciowego
     Redim Preserve arrayAdapters(UBound(arrayAdapters) +1)
     arrayAdapters(UBound(arrayAdapters)) = adapter.Description
