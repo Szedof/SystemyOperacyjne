@@ -128,11 +128,7 @@ End Function
 
 
 Function configMask(Ask)
-    for each value in Ask
-        adapterMaskCurrent = value.IPSubnet(0)
-    Next                
-
-    inputChangeMask = InputBox("Aktualna Maska podsieci: " & adapterMaskCurrent)  
+    inputChangeMask = InputBox("Podaj maske: " & adapterMaskCurrent)  
 
     for Each value In Ask
         IPArray = Array(value.IPAddress(0))
@@ -149,15 +145,7 @@ End Function
 
 
 Function configGate(Ask)
-    for Each value in Ask
-        If not isNull(value.DefaultIPGateway) Then
-            adapterGatewayCurrent = value.DefaultIPGateway(0)
-        Else
-            adapterGatewayCurrent = "Brak bramy domyslnej"
-        End If
-    Next
-
-    inputChangeGateway = InputBox("Aktualna Brama: " & adapterGatewayCurrent) 
+    inputChangeGateway = InputBox("Podaj brame: " & adapterGatewayCurrent) 
 
     adapterGatewayArray = Array(inputChangeGateway)
     adapterGatewayMetricArray = Array(1)
@@ -174,20 +162,8 @@ End Function
 
 
 Function configDNS(Ask)
-    adapterDNSCurrent = ""
-
-    for each value in Ask
-        If Not IsNull(value.DNSServerSearchOrder) Then
-            For i = 0 To UBound(value.DNSServerSearchOrder)
-                adapterDNSCurrent = adapterDNSCurrent & value.DNSServerSearchOrder(i) & vbCrLf & vbTab & vbTab & "         "
-            Next
-        Else
-        adapterDNSCurrent = "Brak servera DNS"
-        End If
-    Next
-
-    inputDNSPref= InputBox("Aktualne servery DNS: " & adapterDNSCurrent & vbCrLf & "Podaj adres preferowany") 
-    inputDNSAlter = InputBox("Aktualne servery DNS: " & adapterDNSCurrent & vbCrLf & "Podaj adres alternatywny")
+    inputDNSPref= InputBox("Podaj adres preferowany: ") 
+    inputDNSAlter = InputBox("Podaj adres alternatywny: ")
 
     dnsServers = Array(inputDNSPref, inputDNSAlter)
 
