@@ -6,6 +6,15 @@ Set objWMIService = GetObject("winmgmts:{impersonationLevel=impersonate}!\\" & s
 Set IPConfigSet = objWMIService.ExecQuery _
     ("Select * from Win32_NetworkAdapterConfiguration where IPEnabled = TRUE")
 
+
+
+If WScript.Arguments.Length = 0 Then
+  Set ObjShell = CreateObject("Shell.Application")
+  ObjShell.ShellExecute "wscript.exe" _
+    , """" & WScript.ScriptFullName & """ RunAsAdministrator", , "runas", 1
+  WScript.Quit
+End if
+
 Dim arrayAdapters : arrayAdapters = Array()
 i = 0
 endCheck = True
@@ -27,7 +36,7 @@ While endCheck
     if (CInt(inputChoose) > i) Then
         MsgBox "Nie ma takiego interfejsu, wybierz ponownie"
     Else
-        displayInfo(inputChoose)
+        ' displayInfo(inputChoose)
         configuration(inputChoose)
         endCheck = False
     end if
@@ -54,15 +63,15 @@ Function displayInfo(Choose)
             adapterGate = "Brak bramy domyslnej"
         End If
         
-        If Not IsNull(value.DNSServerSearchOrder) Then
+        If not IsNull(value.DNSServerSearchOrder) Then
             For i = 0 To UBound(value.DNSServerSearchOrder)
-                adapterDNS = adapterDNS & value.DNSServerSearchOrder(i) & vbCrLf & vbTab & "     "
+                adapterDNS = adapterDNS & value.DNSServerSearchOrder(i) & "    "
             Next
         Else
             adapterDNS = "Brak servera DNS"
         End If
 
-        MsgBox "Nazwa: " & adapterName & vbCrLf & "Adress IPv4: " & adapterIP & vbCrLf & "Maska: " & adapterMask & vbCrLf & "Brama domyslna: " &  adapterGate & vbCrLf & "DNS Server: " & adapterDNS
+        displayInfo = "Nazwa: " & adapterName & vbCrLf & "Adress IPv4: " & adapterIP & vbCrLf & "Maska: " & adapterMask & vbCrLf & "Brama domyslna: " &  adapterGate & vbCrLf & "DNS Server: " & adapterDNS & vbCrLf
     Next
 End Function
 
@@ -74,7 +83,8 @@ Function configuration(Choose)
     user_input = Choose
 
     While endLoop
-        info = "Wybierz wartosc ktora chcesz edytowac" & vbCrLf & "[1] Adres IP" & vbCrLf & "[2] Maska podsieci" & vbCrLf & "[3] Brama" & vbCrLf & "[4] Server DNS" & vbCrLf & "[5] Wyswietl informacje" & vbCrLf & "[6] Wyjscie"
+        currentAdapterValues = displayInfo(Choose)
+        info = currentAdapterValues & vbCrLf & "Wybierz wartosc ktora chcesz edytowac" & vbCrLf & "[1] Adres IP" & vbCrLf & "[2] Maska podsieci" & vbCrLf & "[3] Brama" & vbCrLf & "[4] Server DNS" & vbCrLf & "[5] Wyjscie"
         inputEditChoose = InputBox(info)
 
         Select Case inputEditChoose
@@ -87,8 +97,6 @@ Function configuration(Choose)
             case 4
                 configDNS(AdapterChange)
             case 5
-                displayInfo(user_input)
-            case 6
                 endLoop = False
         End Select
     Wend
@@ -103,16 +111,17 @@ Function configIP(Ask)
     Next
 
     inputChangeIP = InputBox("Aktualny adres IP: " & adapterIPCurrent)
+    inputChangeMask = inputBox("Aktualna maska: " & adapterMask)
 
     for Each value in Ask 
         inputChangeIPArray = Array(inputChangeIP)
-        subnetArray = Array(adapterMask)
+        subnetArray = Array(inputChangeMask)
         
         errIP = value.EnableStatic(inputChangeIPArray, subnetArray)
         if (errIP = 0) Then
-            MsgBox "IPv4 zostalo zmienione na: " & inputChangeIP
+            MsgBox "Parametry zostaly zmienione na: " & vbCrLf & "IP: " & inputChangeIP & vbCrLf & "Maska: " & inputChangeMask 
         Else
-            MsgBox "Blad przy zmianie IP"
+            MsgBox "Blad przy zmianie parametrow"
         End If
     Next
 End Function    
